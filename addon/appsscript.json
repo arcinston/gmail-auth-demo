@@ -5,7 +5,7 @@
     "https://www.googleapis.com/auth/script.external_request"
   ],
   "urlFetchWhitelist": [
-    "https://005d5076.ngrok.io/"
+    "https://f597-104-29-66-25.in.ngrok.io/"
   ],
   "gmail": {
     "name": "Gmail Demo",
@@ -17,7 +17,7 @@
     }],
     "openLinkUrlPrefixes": [
       "http://localhost:3000/",
-      "https://005d5076.ngrok.io/",
+      "https://f597-104-29-66-25.in.ngrok.io/",
       "https://mail.google.com/"
     ],
     "primaryColor": "#4285F4",
