@@ -35,8 +35,8 @@ app.get('/', (req, res) => {
 app.use(bodyParser.urlencoded());
 
 app.get('/login', (req, res) => {
-  const { redirect_uri, response_type, state } = req.query;
-
+  const { client_id, redirect_uri, response_type, state, scope } = req.query;
+  console.log({ q_params: req.query });
   res.render('pages/login', {
     clientId: GOOGLE_CLIENT_ID,
     redirectUri: redirect_uri,
@@ -48,8 +48,10 @@ app.get('/login', (req, res) => {
 app.post('/token', (req, res) => {
   const credential = req.body.code;
   const result = {};
+  console.log({ req_body: req.body });
 
-  verify(credential);
+  // verify(credential);
+  // const {code ,grant_type, redirect_uri, client_id, client_secret} = req.body;
 
   if (!credential || credential.length <= 0) {
     result.error = 'no valid code!';
