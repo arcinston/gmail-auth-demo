@@ -7,8 +7,8 @@ var scopes = [
 
 function getService() {
   return OAuth2.createService('Demo Auth')
-    .setAuthorizationBaseUrl('https://6dbd-104-28-233-236.in.ngrok.io/login')
-    .setTokenUrl('https://6dbd-104-28-233-236.in.ngrok.io/token')
+    .setAuthorizationBaseUrl('https://d7b5-104-28-233-235.in.ngrok.io/login')
+    .setTokenUrl('https://d7b5-104-28-233-235.in.ngrok.io/token')
     .setClientId(
       '579347907843-bb3htr50m5rm4iagn8b0q9tldeardbbi.apps.googleusercontent.com'
     )
@@ -47,8 +47,8 @@ function create3PAuthorizationUi() {
 }
 
 function authCallback(callbackRequest) {
-  Logger.log('Run authcallback!');
   console.log('Run authcallback!');
+  console.log(callbackRequest);
   const authorized = getService().handleCallback(callbackRequest);
   console.log(authorized);
   return HtmlService.createHtmlOutput(
@@ -79,8 +79,11 @@ function buildAddOn(e) {
   var section = CardService.newCardSection();
 
   var textWidget = CardService.newTextParagraph().setText('Hello World');
+  var resetButton = CardService.newTextButton()
+    .setText('Logout')
+    .setOnClickAction(CardService.newAction().setFunctionName('logout'));
 
-  section.addWidget(textWidget);
+  section.addWidget(textWidget).addWidget(resetButton);
 
   var card = CardService.newCardBuilder()
     .setHeader(CardService.newCardHeader().setTitle('Addon Demo'))
@@ -88,4 +91,9 @@ function buildAddOn(e) {
     .build();
 
   return [card];
+}
+
+function logout() {
+  var service = getService();
+  service.reset();
 }
