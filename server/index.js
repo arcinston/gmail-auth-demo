@@ -1,45 +1,63 @@
-const express = require('express')
-const bodyParser = require('body-parser')
+const express = require('express');
+const bodyParser = require('body-parser');
 
-const app = express()
-const port = 3000
+const app = express();
+const port = 3000;
+const { OAuth2Client } = require('google-auth-library');
 
-const GOOGLE_CLIENT_ID = '1059874785832-e70d6k0o0o5b92ujkqllluilj5bdq7oh.apps.googleusercontent.com'
+const GOOGLE_CLIENT_ID =
+  '579347907843-bb3htr50m5rm4iagn8b0q9tldeardbbi.apps.googleusercontent.com';
 
+const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
-app.set('view engine', 'ejs')
+async function verify(token) {
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: GOOGLE_CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
+    // Or, if multiple clients access the backend:
+    //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+  });
+  console.log({ ticket });
+  const payload = ticket.getPayload();
+  console.log({ ticket });
+  const userid = payload['sub'];
+  console.log({ userid });
+  // If request specified a G Suite domain:
+  const domain = payload['hd'];
+  console.log({ domain });
+}
+app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-    res.render('pages/index')
-})
+  res.render('pages/index');
+});
 
-app.use(bodyParser.urlencoded())
+app.use(bodyParser.urlencoded());
 
 app.get('/login', (req, res) => {
-    const { redirect_uri, response_type, state } = req.query
+  const { redirect_uri, response_type, state } = req.query;
 
-    res.render('pages/login', {
-        clientId: GOOGLE_CLIENT_ID,
-        redirectUri: redirect_uri,
-        state,
-        responseType: response_type
-    })
-})
-
+  res.render('pages/login', {
+    clientId: GOOGLE_CLIENT_ID,
+    redirectUri: redirect_uri,
+    state,
+    responseType: response_type,
+  });
+});
 
 app.post('/token', (req, res) => {
-    const { code } = req.body;
-    console.log(code);
-    const result = {};
-    if (!code || code.length <= 0) {
-        result.error = 'no valid code!'
-    } else {
-        result.expires_in = 2592000
-    }
+  const credential = req.body.code;
+  const result = {};
 
-    res.status(200).send(JSON.stringify(result))
-})
+  verify(credential);
 
+  if (!credential || credential.length <= 0) {
+    result.error = 'no valid code!';
+  } else {
+    result.expires_in = 2592000;
+  }
 
+  res.status(200).send(JSON.stringify(result));
+});
 
-app.listen(port, () => console.log(`Listing on port: ${port}!`))
+app.listen(port, () => console.log(`Listing on port: ${port}!`));

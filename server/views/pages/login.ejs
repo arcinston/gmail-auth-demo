@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 
-<head>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <meta name="google-signin-client_id" content="<%= clientId %>">
-</head>
-
-<body>
-    <div>
-            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <body>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <div id="g_id_onload"
+         data-auto_prompt ="false"
+         data-client_id="<%= clientId %>"
+         data-callback="onSignIn">
     </div>
+    <div class="g_id_signin" data-type="standard" ></div>
     <script>
         function onSignIn(googleUser) {
-            var profile = googleUser.getBasicProfile();
-            var idToken = googleUser.getAuthResponse().id_token;
-            window.location.replace('<%= redirectUri %>?success=1&response_type=<% responseType %>&state=<%= state %>&code=' + idToken);
+            const creds = googleUser.credential
+            console.log({creds})
+            window.location.replace("<%= redirectUri %>??success=1&response_type=<% responseType %>&state=<%= state %>&code="+creds)
         }
     </script>
+
 </body>
 
 </html>
